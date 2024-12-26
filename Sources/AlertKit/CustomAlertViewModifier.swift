@@ -1,6 +1,6 @@
 //
 //  CustomAlertViewModifier.swift
-//  
+//
 //
 //  Created by Alex Nagy on 07.01.2021.
 //
@@ -70,30 +70,28 @@ public struct CustomAlertViewModifier<AlertContent: View>: ViewModifier {
     
     public func verticalButtonPad() -> some View {
         VStack(spacing: 0) {
-            ForEach(0..<buttons.count) {
+            ForEach(buttons, id: \.id) { button in
                 Divider().padding([.leading, .trailing], -12)
-                let current = buttons[$0]
                 
                 Button(action: {
-                    if !current.isCancel {
-                        current.action()
+                    if !button.isCancel {
+                        button.action()
                     }
                     
                     withAnimation {
                         self.customAlertManager.isPresented.toggle()
                     }
                 }, label: {
-                    current.content
+                    button.content
                 })
-                .disabled(current.isDisabled)
                 .padding(8)
                 .frame(minHeight: 44)
             }
         }
     }
+
     
     public func horizontalButtonsPadFor(_ expectedWidth: CGFloat) -> some View {
-        
         HStack(spacing: 0) {
             let sidesOffset: CGFloat = 12 * 2
             let maxHorizontalWidth = requireHorizontalPositioning ?
@@ -103,24 +101,22 @@ public struct CustomAlertViewModifier<AlertContent: View>: ViewModifier {
             Spacer()
             
             if !requireHorizontalPositioning {
-                ForEach(0..<buttons.count) {
-                    if $0 != 0 {
+                ForEach(buttons, id: \.id) { button in
+                    if buttons.firstIndex(where: { $0.id == button.id }) != 0 {
                         Divider().frame(height: 44)
                     }
-                    let current = buttons[$0]
                     
                     Button(action: {
-                        if !current.isCancel {
-                            current.action()
+                        if !button.isCancel {
+                            button.action()
                         }
                         
                         withAnimation {
                             self.customAlertManager.isPresented.toggle()
                         }
                     }, label: {
-                        current.content
+                        button.content
                     })
-                    .disabled(current.isDisabled)
                     .padding(8)
                     .frame(maxWidth: maxHorizontalWidth, minHeight: 44)
                 }
@@ -139,3 +135,4 @@ extension UIColor {
     }
 }
 #endif
+

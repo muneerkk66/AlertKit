@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-public struct CustomAlertButton {
-
+public struct CustomAlertButton:Identifiable {
+    public let id = UUID() 
     public enum Variant {
         case cancel
         case regular
